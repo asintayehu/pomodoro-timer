@@ -11,8 +11,18 @@ WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 reps = 0
+timer = None
 
 # ---------------------------- TIMER RESET ------------------------------- #
+
+def reset():
+    window.after_cancel(timer)
+    canvas.itemconfig(timer_text, text="00:00")
+    welcome_txt.config(text="Timer")
+    check_label.config(text="")
+    global reps
+    reps = 0
+
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 
@@ -42,9 +52,15 @@ def countdown(count):
         seconds = f"0{seconds}"
     canvas.itemconfig(timer_text, text=f"{minutes}:{seconds}")
     if count > 0:
-        window.after(1000, countdown, count-1)
+        global timer
+        timer = window.after(1000, countdown, count-1)
     else:
         start_timer()
+        mark = ""
+        for _ in range(reps//2):
+            mark += "🗸"
+        check_label.config(text=mark)
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
@@ -52,7 +68,7 @@ window.title("Pomodoro Timer")
 window.minsize(width=200, height=224)
 window.config(padx=100, pady=50, bg=YELLOW)
 fg = GREEN
-# 🗸🗸🗸🗸🗸
+# 🗸🗸🗸🗸
 canvas = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
 tomato_picture = PhotoImage(file="tomato.png")
 canvas.create_image(100, 112, image=tomato_picture)
@@ -69,11 +85,11 @@ btn_start.config(text="Start", width=8, command=start_timer)
 btn_start.grid(row=2, column=0)
 
 btn_reset = Button()
-btn_reset.config(text="Reset", width=8)
+btn_reset.config(text="Reset", width=8, command=reset)
 btn_reset.grid(row=2, column=2)
 
 check_label = Label()
-check_label.config(text="🗸", bg=YELLOW, fg=GREEN, font=(FONT_NAME, 25))
+check_label.config(text="", bg=YELLOW, fg=GREEN, font=(FONT_NAME, 25))
 check_label.grid(row=3, column=1)
 
 window.mainloop()
