@@ -24,10 +24,13 @@ def start_timer():
     long_break_sec = LONG_BREAK_MIN * 60
     if reps % 2 == 0 and reps != 8:
         countdown(short_break_sec)
+        welcome_txt.config(text="Break", fg=PINK)
     elif reps == 8:
         countdown(long_break_sec)
+        welcome_txt.config(text="Break", fg=RED)
     else:
         countdown(work_sec)
+        welcome_txt.config(text="Work", fg=GREEN)
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def countdown(count):
@@ -40,6 +43,8 @@ def countdown(count):
     canvas.itemconfig(timer_text, text=f"{minutes}:{seconds}")
     if count > 0:
         window.after(1000, countdown, count-1)
+    else:
+        start_timer()
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
